@@ -1,151 +1,109 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-interface FaqItem {
-    question: string;
-    answer: string;
-}
+import { useState } from "react";
+import RevealWords from "./reveal-words";
 
-const Faq: React.FC = () => {
-    const faqData: FaqItem[] = [
-        {
-            question: "How do I receive payments from my customers?",
-            answer: "Payments are processed securely and deposited into your wallet within 24-48 hours. You can withdraw funds to your bank account anytime."
-        },
-        {
-            question: "What are the withdrawal fees?",
-            answer: "We charge 0.5% per withdrawal. No fees for keeping funds in your wallet, so you can accumulate and withdraw to minimize costs."
-        },
-        {
-            question: "What is the minimum withdrawal?",
-            answer: "The minimum withdrawal is $10 with no maximum limit. Withdraw as much as you have available."
-        },
-        {
-            question: "Can I receive payments in foreign currencies?",
-            answer: "Yes! Enable multi-currency in settings. Funds are held in the original currency and you can withdraw or convert to local currency."
-        },
-        {
-            question: "What payment methods can my customers use?",
-            answer: "Credit/debit cards, bank transfers, mobile money, and digital wallets. Enable or disable methods in your store settings."
-        },
-        {
-            question: "How long does it take to set up my online store?",
-            answer: "Minutes! Sign up, input store details, add products, and get your unique store link immediately."
-        },
-        {
-            question: "Can I customize my store link?",
-            answer: "Yes! Customize your URL to eg. Myphonestore.com (Available on paid premium)."
-        }
-    ];
+const faqs = [
+  {
+    question: "What is Bloom?",
+    answer:
+      "Bloom is a simple storefront builder. Create your online store, add products, and start selling in minutes, with no coding required.",
+  },
+  {
+    question: "What can I sell on Bloom?",
+    answer:
+      "Digital downloads, courses, ebooks, templates, services, and physical products.",
+  },
+  {
+    question: "How much does Bloom cost?",
+    answer:
+      "You can start for free. Bloom only takes a small fee when you make a sale.",
+  },
+  {
+    question: "How do I get paid?",
+    answer:
+      "Customers pay at checkout and your earnings go to your connected bank account. Withdraw anytime from your dashboard.",
+  },
+  {
+    question: "Can I use my own domain?",
+    answer:
+      "Yes. Connect a custom domain to your store, or use your free Bloom link.",
+  },
+];
 
-    const [openIndex, setOpenIndex] = useState<number | null>(null);
-    const faqItemRefs = useRef<(HTMLDivElement | null)[]>([]);
+export default function Faq() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-    const toggleFaq = (index: number) => {
-        setOpenIndex(openIndex === index ? null : index);
-    };
+  return (
+    <section
+      className="w-full bg-white px-4 py-20 sm:px-8 sm:py-36"
+      aria-labelledby="faq-heading"
+    >
+      <div className="mx-auto flex w-full max-w-350 flex-col items-center gap-12 sm:gap-16">
+        <h2
+          id="faq-heading"
+          data-section-heading
+          className="bricolage max-w-170 text-center text-[43px] leading-[100%] tracking-tight text-[#111] sm:text-6xl"
+        >
+          <RevealWords lines={["Frequently Asked", "Questions"]} />
+        </h2>
 
-    useEffect(() => {
-        // Register ScrollTrigger plugin
-        gsap.registerPlugin(ScrollTrigger);
+        <div className="sans_serif flex w-full max-w-200 flex-col gap-4 sm:gap-5">
+          {faqs.map(({ question, answer }, index) => {
+            const isOpen = openIndex === index;
 
-        // Animate each FAQ item individually with increasing delay
-        faqItemRefs.current.forEach((itemRef, index) => {
-            if (itemRef) {
-                gsap.fromTo(
-                    itemRef,
-                    {
-                        opacity: 0,
-                        y: 20,
-                    },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.6,
-                        ease: "power2.out",
-                        delay: index * 0.1,
-                        scrollTrigger: {
-                            trigger: itemRef,
-                            start: "top 85%",
-                            toggleActions: "play none none reverse",
-                        },
-                    }
-                );
-            }
-        });
-
-        // Cleanup function
-        return () => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-        };
-    }, []);
-
-    return (
-        <div className="flex flex-col justify-center items-center gap-16 py-16">
-            {/* section's header */}
-            <div className="flex flex-col gap-6 text-center">
-                <div className="flex items-center font-medium justify-center gap-2 text-[#1f514c]">
-                    <div className="w-2 h-2 bg-[#1f514c] rounded-full">
-                        <div className="w-2 h-2 bg-[#1f514c] rounded-full animate-ping"></div>
-                    </div>
-                    <p className="text-sm">FAQ</p>
+            return (
+              <div
+                data-micro-group
+                key={question}
+                className="rounded-[20px] bg-[#f7f7f7] px-5 py-5 sm:px-6 sm:py-5"
+              >
+                <h3>
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${index}`}
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    className="flex w-full items-center justify-between gap-4 rounded-xl bg-[#f7f7f7] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a58cff]"
+                  >
+                    <span className="text-xl font-semibold leading-snug tracking-tight text-[#222] sm:text-2xl">
+                      {question}
+                    </span>
+                    <span data-micro-item="pop" className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#a58cff] text-white">
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        className="size-6"
+                      >
+                        {isOpen ? (
+                          <path d="M5 5l14 14M19 5 5 19" />
+                        ) : (
+                          <path d="M12 4v16M4 12h16" />
+                        )}
+                      </svg>
+                    </span>
+                  </button>
+                </h3>
+                <div
+                  id={`faq-answer-${index}`}
+                  aria-hidden={!isOpen}
+                  className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+                >
+                  <div className="min-h-0 overflow-hidden">
+                    <p className="pt-5 sm:pr-10 text-lg text-[#3b3b3b] sm:text-2xl sm:leading-[130%]">
+                      {answer}
+                    </p>
+                  </div>
                 </div>
-                <div className="sm:text-5xl leading-[130%] text-4xl max-w-[600px] hedvig">
-                    Answers to your most common questions
-                </div>
-            </div>
-
-            {/* Frequently asked questions */}
-            <div className="w-full max-w-3xl px-4">
-                {faqData.map((faq, index) => (
-                    <div
-                        ref={(el) => {
-                            faqItemRefs.current[index] = el;
-                        }}
-                        key={index}
-                        className="border-b border-gray-200 last:border-b-0"
-                    >
-                        <button
-                            onClick={() => toggleFaq(index)}
-                            className="w-full py-5 flex items-center justify-between text-left gap-4 hover:text-[#1f514c] transition-colors"
-                        >
-                            <span className="sm:text-lg font-medium pr-4">
-                                {faq.question}
-                            </span>
-
-                            <div className="bg-[#1f514c] flex items-center justify-center p-1 rounded-full text-white">
-                                <svg
-                                    className={`w-4 h-4 shrink-0 transition-transform duration-300 ${openIndex === index ? "rotate-180" : ""
-                                        }`}
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M19 9l-7 7-7-7"
-                                    />
-                                </svg>
-                            </div>
-
-                        </button>
-                        <div
-                            className={`overflow-hidden transition-all duration-300 ${openIndex === index ? "max-h-96 mb-6" : "max-h-0"
-                                }`}
-                        >
-                            <p className="text-gray-600 leading-relaxed">
-                                {faq.answer}
-                            </p>
-                        </div>
-                    </div>
-                ))}
-            </div>
+              </div>
+            );
+          })}
         </div>
-    );
-};
-
-export default Faq;
+      </div>
+    </section>
+  );
+}

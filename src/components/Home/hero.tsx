@@ -1,193 +1,123 @@
-"use client";
-/* eslint-disable @next/next/no-img-element */
-import Header from "./header";
-import Rating from "../ui/rating"
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Link from "next/link";
+import ProfileStack from "../ui/profile_stack";
+import RevealWords from "./reveal-words";
 
-gsap.registerPlugin(ScrollTrigger);
+const features = [
+  "Digital products",
+  "Courses & memberships",
+  "Services & bookings",
+];
 
-interface HeroProps {
-    onToggleSideNav: () => void;
-}
+export default function Hero() {
+  return (
+    <div
+      data-hero-section
+      className="pointer-events-none px-3 relative z-20 w-full flex-col gap-5 h-fit sm:h-screen flex max-w-370 items-center"
+    >
+      <div className="h-19 w-full xl:h-18" />
 
-const Hero: React.FC<HeroProps> = ({ onToggleSideNav }) => {
-    const headerRef = useRef<HTMLDivElement>(null);
-    const ratingRef = useRef<HTMLDivElement>(null);
-    const titleRef = useRef<HTMLDivElement>(null);
-    const descRef = useRef<HTMLParagraphElement>(null);
-    const buttonsRef = useRef<HTMLDivElement>(null);
-    const imageRef = useRef<HTMLDivElement>(null);
+      {/* Hero Banner */}
+      <div className="flex xl:flex-row pt-5 sm:pt-10 flex-col sm:items-center xl:items-stretch gap-18 xl:gap-0 justify-between flex-1 rounded-lg w-full">
+        {/* Banner/Hero Text - Buttons */}
+        <div className="pointer-events-auto flex flex-col sm:items-center xl:items-start gap-8 relative z-10 shrink-0">
+          <div
+            data-section-heading
+            className="sm:text-center xl:text-left sm:text-[80px] text-6xl text-[#111] leading-[90%] bricolage tracking-tighter"
+          >
+            <RevealWords lines={["Your Online", "store Live in", "minutes."]} />
+          </div>
 
-    useEffect(() => {
-        // Animate header - fade down
-        if (headerRef.current) {
-            gsap.fromTo(
-                headerRef.current,
-                { opacity: 0, y: -20 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.6,
-                    ease: "power2.out",
-                    delay: 0.1
-                }
-            );
-        }
-
-        // Animate rating - fade in
-        if (ratingRef.current) {
-            gsap.fromTo(
-                ratingRef.current,
-                { opacity: 0 },
-                {
-                    opacity: 1,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    delay: 0.4
-                }
-            );
-        }
-
-        // Animate title - fade up
-        if (titleRef.current) {
-            gsap.fromTo(
-                titleRef.current,
-                { opacity: 0, y: 20 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    delay: 0.6
-                }
-            );
-        }
-
-        // Animate description - fade up
-        if (descRef.current) {
-            gsap.fromTo(
-                descRef.current,
-                { opacity: 0, y: 20 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    delay: 0.8
-                }
-            );
-        }
-
-        // Animate buttons - fade up
-        if (buttonsRef.current) {
-            gsap.fromTo(
-                buttonsRef.current,
-                { opacity: 0, y: 20 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    delay: 1
-                }
-            );
-        }
-
-        // Animate image - scale and fade
-        if (imageRef.current) {
-            gsap.fromTo(
-                imageRef.current,
-                { opacity: 0, scale: 0.95 },
-                {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 1,
-                    ease: "power2.out",
-                    delay: 0.5
-                }
-            );
-        }
-    }, []);
-
-    // Handles navigation on wide screen
-    const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-        e.preventDefault();
-
-        const element = document.getElementById(targetId);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    };
-
-    return (
-        <div className="pb-16 max-w-[1200px] px-4">
-            {/* header component */}
-            <div ref={headerRef} className="z-1000 relative">
-                <Header onToggleSideNav={onToggleSideNav} />
-            </div>
-
-            {/* main */}
-            <div className="mt-5 text-white relative items-start lg:items-center gap-x-5 gap-y-11 lg:flex-row flex-col pt-6 lg:pt-3 lg:pb-3 pb-6 flex px-6 lg:px-3 justify-between h-fit lg:h-[83vh] rounded-3xl md:rounded-[28px] w-full bg-[#1f514c]">
-                {/* hero - left */}
-                <div className="flex flex-col px-0 lg:pl-10 gap-10 md:max-w-[70%]  lg:max-w-1/2">
-                    {/* hero banner */}
-                    <div className="flex flex-col gap-5">
-                        {/* Rating-ui */}
-                        <div ref={ratingRef}>
-                            <Rating />
-                        </div>
-                        <div
-                            ref={titleRef}
-                            className="text-[45px] leading-[110%] md:leading-[100%] md:text-6xl hedvig tracking-tight"
-                        >
-                            Launch an Online store in minutes.
-                        </div>
-                        <p
-                            ref={descRef}
-                            className="max-w-[500px] text-md sm:text-lg"
-                        >
-                            start selling your products, services, or contents, all under your
-                            own online store, no coding required
-                        </p>
-                    </div>
-
-                    {/* banner buttons */}
-                    <div
-                        ref={buttonsRef}
-                        className="flex gap-5 flex-wrap items-center text-md"
-                    >
-                        <Link href={'/Authentication'}>
-                            <div className="bg-white gap-2 text-white py-1 pl-5 pr-1 rounded-full cursor-pointer flex justify-end items-center">
-
-                                <p className="text-black">Launch store</p>
-                                <div className="p-1.5 bg-[#1f514c] rounded-full flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#fff"><path d="M646-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h446L532-634q-12-12-11.5-28t11.5-28q12-12 28.5-12.5T589-691l183 183q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L589-269q-12 12-28.5 11.5T532-270q-11-12-11.5-28t11.5-28l114-114Z" /></svg>
-                                </div>
-                            </div >
-                        </Link>
-                        <a
-                            href="#pricing"
-                            onClick={(e) => handleNavClick(e, 'pricing')}
-                            className="cursor-pointer"
-                        >
-                            Pricing
-                        </a>
-                    </div>
-                </div>
-
-                {/* hero - right */}
-                <div
-                    ref={imageRef}
-                    className="lg:w-[40%]  w-full h-[450px] md:h-[400px] lg:h-full bg-[#337F74] md:rounded-[20px] rounded-[16px]"
+          {/* Feature list */}
+          <ul data-micro-group className="flex flex-col gap-2">
+            {features.map((item) => (
+              <li key={item} className="flex items-center gap-3">
+                <svg
+                  data-micro-item="spin"
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5 shrink-0"
+                  fill="none"
+                  stroke="#FEA8F1"
+                  strokeWidth="4"
+                  strokeLinecap="round"
                 >
-                    <img src="/starbox-hero-pic.png" alt="" className="w-full h-full rounded-[inherit] object-cover relative -z-10" />
-                </div>
-            </div>
-        </div >
-    )
-}
+                  <path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9" />
+                </svg>
+                <span className="text-base font-medium uppercase tracking-wider font-[var(--font-dm-sans)]">
+                  {item}
+                </span>
+              </li>
+            ))}
+          </ul>
 
-export default Hero;
+          <div className="flex gap-2 items-center">
+            <div className="group flex h-14 cursor-pointer items-center space-x-1">
+              <div className="bg-black text-white text-lg rounded-full h-full flex items-center justify-start px-7 w-60">
+                Launch Store
+              </div>
+              <div className="rounded-full w-14 h-full bg-[#FEA8F1] group-hover:bg-[#ADF535] transition-colors duration-300 flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#000"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition-transform duration-300 group-hover:rotate-45"
+                >
+                  <path d="M7 7h10v10" />
+                  <path d="M7 17 17 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="pointer-events-none relative z-0 flex w-full items-end justify-center h-[45vh] sm:h-[55vh] xl:h-auto xl:absolute xl:inset-0">
+          <div className="relative h-full aspect-[849/768] shrink-0 origin-bottom scale-[1.15] sm:scale-100 xl:h-[80%] xl:h-[85%]">
+            <img
+              src="/hero_image.webp"
+              alt=""
+              className="h-full w-full object-contain"
+            />
+            <img
+              src="/naira-coin-green-detailed.webp"
+              data-hero-scene="coin"
+              alt=""
+              className="absolute left-[73%] top-[8%] w-[12%]"
+            />
+            <img
+              src="/shopping-cart-green-blurred-complete.webp"
+              data-hero-scene="cart"
+              alt=""
+              className="absolute bottom-[4%] left-[3%] blur-xs w-[35%]"
+            />
+          </div>
+        </div>
+
+        {/* Bloom short description */}
+        <div className="xl:flex flex-col hidden self-center xl:mt-0 -mt-10 z-10 relative">
+          <div className="flex max-w-150 xl:max-w-90 bg-white flex-col p-4 rounded-xl gap-2">
+            <div className="text-gray-600 sm:text-lg">
+              Add your products, set your prices, and get paid. Bloom handles
+              the storefront, checkout, and delivery.
+            </div>
+            <ProfileStack
+              profiles={[
+                { src: "/profile1.png" },
+                { src: "/profile2.png" },
+                { src: "/profile3.webp" },
+              ]}
+              label="Join 2,000+ creators"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] bg-linear-to-b from-transparent to-white h-20"
+      />
+    </div>
+  );
+}

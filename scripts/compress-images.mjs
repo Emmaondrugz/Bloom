@@ -6,6 +6,55 @@ import sharp from "sharp";
 const dirs = ["public", "public/icons"];
 const exts = new Set([".png", ".jpg", ".jpeg", ".webp"]);
 const MAX_WIDTH = 1920;
+const MAX_BYTES = 180 * 1024;
+const [mode, ...targets] = process.argv.slice(2);
+
+if (mode === "--webp") {
+  if (targets.length === 0) throw new Error("Pass image paths after --webp");
+
+  const publicDir = path.resolve("public");
+  for (const target of targets) {
+    const file = path.resolve(target);
+    if (!file.startsWith(`${publicDir}${path.sep}`)) {
+      throw new Error(`Image must be inside public: ${target}`);
+    }
+
+    const output = path.join(
+      path.dirname(file),
+      `${path.basename(file, path.extname(file))}.webp`,
+    );
+    const before = (await fs.stat(file)).size;
+    if (before <= MAX_BYTES) {
+      console.log(`${file}: skipped (already under 180KB)`);
+      continue;
+    }
+
+    let contents;
+    for (const width of [MAX_WIDTH, 1280, 960, 640]) {
+      contents = await sharp(file)
+        .resize({ width, withoutEnlargement: true })
+        .webp({ quality: 82, alphaQuality: 100, effort: 6 })
+        .toBuffer();
+      if (contents.length <= MAX_BYTES) break;
+    }
+
+    if (!contents || contents.length > MAX_BYTES) {
+      throw new Error(`Could not reduce ${file} below 180KB`);
+    }
+
+    if (contents.length >= before) {
+      console.log(`${file}: skipped (WebP is not smaller)`);
+      continue;
+    }
+
+    if (output === file) await replaceFile(file, contents);
+    else await fs.writeFile(output, contents, { flag: "wx" });
+    console.log(
+      `${file}: ${(before / 1024).toFixed(0)}KB -> ${(contents.length / 1024).toFixed(0)}KB (${output})`,
+    );
+  }
+  process.exit(0);
+}
 
 async function archiveOriginal(file) {
   const relativePath = path.relative("public", file);

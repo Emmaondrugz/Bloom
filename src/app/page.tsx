@@ -1,90 +1,177 @@
 "use client";
-import { useState, useEffect } from "react";
-import Hero from "../components/Home/hero";
-import Whyus from "../components/Home/whyus";
-import Steps from "../components/Home/steps";
-import Features from "../components/Home/features";
-import Price_section from "../components/Home/price_section";
-import Comments from "../components/Home/comments";
-import Faq from "../components/Home/faq";
-import Footer from "../components/Home/footer";
-import SideNav from "../components/Home/sidenav";
+import { useEffect, useRef } from "react";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import Header from "@/components/Home/header";
+import Hero from "@/components/Home/hero";
+import Problems from "@/components/Home/problems";
+import Steps from "@/components/Home/steps";
+import "@/app/globals.css";
+import Features from "@/components/Home/features";
+import Testimonials from "@/components/Home/testimonials";
+import Pricing from "@/components/Home/pricing";
+import Faq from "@/components/Home/faq";
+import Cta from "@/components/Home/cta";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+const DESKTOP_MOTION_QUERY =
+  "(min-width: 1300px) and (prefers-reduced-motion: no-preference)";
 
 export default function Home() {
-  const [isSideNavOpen, setIsSideNavOpen] = useState(false);
-  const [showBackToTop, setShowBackToTop] = useState(false);
+  const pageRef = useRef<HTMLDivElement>(null);
 
-  const toggleSideNav = () => {
-    setIsSideNavOpen(!isSideNavOpen);
-  };
-
-  // Show button when page is scrolled down
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 400) {
-        setShowBackToTop(true);
-      } else {
-        setShowBackToTop(false);
+    const media = window.matchMedia(DESKTOP_MOTION_QUERY);
+    let stopLenis: (() => void) | undefined;
+
+    const syncLenis = () => {
+      if (media.matches && !stopLenis) {
+        const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+        const updateScrollTrigger = () => ScrollTrigger.update();
+        const tick = (time: number) => lenis.raf(time * 1000);
+
+        lenis.on("scroll", updateScrollTrigger);
+        gsap.ticker.add(tick);
+        gsap.ticker.lagSmoothing(0);
+
+        stopLenis = () => {
+          gsap.ticker.remove(tick);
+          lenis.off("scroll", updateScrollTrigger);
+          lenis.destroy();
+          gsap.ticker.lagSmoothing(500, 33);
+        };
+      } else if (!media.matches && stopLenis) {
+        stopLenis();
+        stopLenis = undefined;
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    media.addEventListener("change", syncLenis);
+    syncLenis();
+
+    return () => {
+      media.removeEventListener("change", syncLenis);
+      stopLenis?.();
+    };
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
+  useGSAP(
+    () => {
+      const media = gsap.matchMedia();
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        const root = pageRef.current;
+        const headings = root?.querySelectorAll<HTMLElement>(
+          "[data-section-heading]",
+        );
+
+        headings?.forEach((heading) => {
+          const words = heading.querySelectorAll<HTMLElement>(
+            "[data-heading-word]",
+          );
+          gsap.fromTo(
+            words,
+            { scale: 0, transformOrigin: "center center" },
+            {
+              scale: 1,
+              duration: 0.55,
+              delay: 0.1,
+              stagger: 0.05,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: heading,
+                start: "center bottom",
+                once: true,
+              },
+            },
+          );
+        });
+
+        root
+          ?.querySelectorAll<HTMLElement>("[data-micro-group]")
+          .forEach((group) => {
+            const items =
+              group.querySelectorAll<HTMLElement>("[data-micro-item]");
+            items.forEach((item, index) => {
+              const style = item.dataset.microItem;
+              const stepSpin = style === "step-spin";
+              gsap.fromTo(
+                item,
+                {
+                  opacity: 0,
+                  scale: stepSpin ? 0.65 : style === "spin" ? 0.7 : 0.85,
+                  rotation: stepSpin ? -75 : style === "spin" ? -35 : 0,
+                  y: style === "bounce" ? 12 : 0,
+                },
+                {
+                  opacity: 1,
+                  scale: 1,
+                  rotation: 0,
+                  y: 0,
+                  duration: stepSpin ? 0.5 : style === "bounce" ? 0.65 : 0.45,
+                  delay: index * 0.08,
+                  ease: stepSpin
+                    ? "power3.out"
+                    : style === "bounce"
+                      ? "bounce.out"
+                      : "back.out(1.5)",
+                  scrollTrigger: {
+                    trigger: group,
+                    start: "top 85%",
+                    once: true,
+                  },
+                },
+              );
+            });
+          });
+      });
+
+      media.add(DESKTOP_MOTION_QUERY, () => {
+        const root = pageRef.current;
+        const hero = root?.querySelector<HTMLElement>("[data-hero-section]");
+        const cart = root?.querySelector<HTMLImageElement>(
+          "[data-hero-scene='cart']",
+        );
+        const coin = root?.querySelector<HTMLImageElement>(
+          "[data-hero-scene='coin']",
+        );
+        if (!hero || !cart || !coin) return;
+
+        gsap.to([cart, coin], {
+          y: () => -window.innerHeight * 0.65,
+          ease: "none",
+          scrollTrigger: {
+            trigger: hero,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      });
+
+      return () => media.revert();
+    },
+    { scope: pageRef },
+  );
 
   return (
-    <div className="flex flex-col items-center overflow-hidden justify-center bg-white text-black">
-      <Hero onToggleSideNav={toggleSideNav} />
-      <SideNav isOpen={isSideNavOpen} toggleSideNav={toggleSideNav} />
-      <div className="max-w-[1200px] w-full px-4">
-        <Whyus />
-        <Steps />
-      </div>
-      <div className="w-full px-4 bg-[#ffff] flex justify-center">
-        <Features />
-      </div>
-      <div className="max-w-[1200px] w-full px-4">
-        <Price_section />
-      </div>
-      <Comments />
-      <div className="max-w-[1200px] w-full px-4">
-        <Faq />
-      </div>
-      <div className="max-w-[1200px] w-full px-4">
-        <Footer />
-      </div>
-
-      {/* Back to Top Button */}
-      <button
-        onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 bg-[#1f514c] hover:bg-[#2a6b63] text-white w-12 h-12 rounded-lg shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 z-50 group ${
-          showBackToTop
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10 pointer-events-none"
-        }`}
-        aria-label="Back to top"
-      >
-        <svg
-          className="w-6 h-6 group-hover:-translate-y-1 transition-transform duration-200"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2.5}
-            d="M5 10l7-7m0 0l7 7m-7-7v18"
-          />
-        </svg>
-      </button>
+    <div
+      ref={pageRef}
+      className="flex flex-col poppins items-center overflow-x-clip justify-center bg-white text-black"
+    >
+      <Header />
+      <Hero />
+      <Problems />
+      <Steps />
+      <Features />
+      <Testimonials />
+      <Pricing />
+      <Faq />
+      <Cta />
     </div>
   );
 }

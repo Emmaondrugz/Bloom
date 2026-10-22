@@ -1,57 +1,68 @@
 "use client";
-import Logo from "./logo";
-import Link from "next/link";
 
-interface HeaderProps {
-    onToggleSideNav: () => void;
-}
+import { useEffect, useState } from "react";
 
-const Header: React.FC<HeaderProps> = ({ onToggleSideNav }) => {
-    // Handle navigation on wide screens
-    const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-        e.preventDefault();
+export default function Header() {
+  const [isVisible, setIsVisible] = useState(true);
 
-        const element = document.getElementById(targetId);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY <= 0) {
+        setIsVisible(true);
+        lastScrollY = currentScrollY;
+        return;
+      }
+
+      if (Math.abs(currentScrollY - lastScrollY) < 4) return;
+
+      setIsVisible(currentScrollY < lastScrollY);
+      lastScrollY = currentScrollY;
     };
-    return (
-        <div className="flex z-1000 items-center justify-between sm:pb-4 sm:px-0 px-1.5 pt-5">
-            {/* logo */}
-            <div className="flex items-center justify-center gap-[5px]">
-                <Logo />
-                <p className="md:text-3xl text-[24px] tracking-tight text-[#222] opacity-90 font-medium hedvig pt-1">Bloom</p>
-            </div>
 
-            {/* navigation links :lg */}
-            <div className="md:flex hidden items-center gap-7 text-black">
-                <a onClick={(e) => handleNavClick(e, 'features')} className="cursor-pointer">Features</a>
-                <a onClick={(e) => handleNavClick(e, 'pricing')} className="cursor-pointer">Pricing</a>
-                <a onClick={(e) => handleNavClick(e, 'steps')} className="cursor-pointer">How it works</a>
-            </div >
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-            {/* login button */}
-            <Link href={'/Authentication'}>
-                <div className="bg-[#1f514c] gap-2 text-white py-1 pl-5 pr-1 rounded-full hidden md:flex justify-end items-center">
-                    <p>Start Selling</p>
-                    <div className="p-1.5 bg-white rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#000"><path d="M646-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h446L532-634q-12-12-11.5-28t11.5-28q12-12 28.5-12.5T589-691l183 183q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L589-269q-12 12-28.5 11.5T532-270q-11-12-11.5-28t11.5-28l114-114Z" /></svg>
-                    </div>
-                </div>
-            </Link>
+  return (
+    <div
+      inert={!isVisible}
+      className={`pointer-events-auto fixed top-3 left-1/2 z-50 flex w-[calc(100%_-_1.5rem)] max-w-370 -translate-x-1/2 items-center justify-between rounded-full bg-[#1C1917] px-3 py-3 text-white poppins transition-transform duration-300 ease-out motion-reduce:transition-none ${isVisible ? "translate-y-0" : "-translate-y-[calc(100%_+_0.75rem)] pointer-events-none"}`}
+    >
+      {/* Logo container */}
+      <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center gap-2 bg-[#FEA8F1] rounded-full w-9 h-9">
+          <a href="/">
+            <img src="/icons/logo.webp" alt="" className="w-8 rounded-full" />
+          </a>
+        </div>
 
-            {/* Hamburger menu md-sm */}
-            <button
-                onClick={onToggleSideNav}
-                className="md:hidden flex flex-col gap-1.5 w-8 h-10 justify-center items-end relative z-30"
-                aria-label="Toggle menu"
-            >
-                <div className="bg-black w-full h-1 rounded-full transition-all duration-300"></div>
-                <div className="bg-black w-[60%] h-1 rounded-full transition-all duration-300 "></div>
-            </button >
-        </div >
-    )
+        {/* text */}
+        <div className="bricolage text-3xl">
+          <a href="/">Bloom</a>
+        </div>
+      </div>
+
+      {/* Navigation Links */}
+      <div className="lg:flex hidden items-center gap-10">
+        <a href="/">Steps</a>
+        <a href="/">About us</a>
+        <a href="#pricing">Pricing</a>
+        <a href="/">Contact</a>
+      </div>
+
+      <div className="max-w-[100px] bg-white h-9 text-black lg:flex hidden items-center justify-center w-full rounded-full">
+        Login
+      </div>
+
+      {/* Hamburger menu button */}
+      <div className="lg:hidden flex w-10 h-10 justify-center pr-5 flex-col gap-2">
+        <div className="w-full h-[2px] rounded-full bg-white" />
+        <div className="w-full h-[2px] rounded-full bg-white" />
+      </div>
+    </div>
+  );
 }
-
-export default Header;
