@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { testimonials } from "./testimonials-data";
+import SplitArrowAction from "../ui/split-arrow-action";
 import RevealWords from "./reveal-words";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -68,7 +69,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="flex w-full flex-col items-center gap-12 pt-20 pb-20 sm:gap-16 sm:pt-28 sm:pb-20">
+    <section id="testimonials" className="flex w-full flex-col items-center gap-12 pt-20 pb-20 sm:gap-16 sm:pt-28 sm:pb-20">
       <div data-micro-group className="flex  max-w-350 w-full items-center px-4 sm:px-8 justify-between gap-8">
         <div className="flex flex-col items-start gap-3 text-left">
           <span data-micro-item="bounce" className="rounded-full bg-[#FEA8F1] px-4 py-1.5 text-base font-medium text-[#222]">
@@ -157,28 +158,9 @@ export default function Testimonials() {
           consistently.
         </div>
 
-        <div className="group flex h-14 cursor-pointer items-center space-x-1">
-          <div className="bg-black text-white text-lg rounded-full h-full flex items-center justify-start px-7 w-60 sm:w-80">
-            More About us
-          </div>
-          <div className="rounded-full w-14 h-full bg-[#FEA8F1] group-hover:bg-[#ADF535] transition-colors duration-300 flex items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#000"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="transition-transform duration-300 group-hover:rotate-45"
-            >
-              <path d="M7 7h10v10" />
-              <path d="M7 17 17 7" />
-            </svg>
-          </div>
-        </div>
+        <SplitArrowAction href="#about" className="w-[300px] text-lg sm:w-[380px]">
+          More About us
+        </SplitArrowAction>
       </div>
     </section>
   );

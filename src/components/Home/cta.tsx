@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import SplitArrowAction from "../ui/split-arrow-action";
 import RevealWords from "./reveal-words";
 
 export default function Cta() {
@@ -23,7 +24,7 @@ export default function Cta() {
         [{ strokeDashoffset: `${length}` }, { strokeDashoffset: "0" }],
         {
           duration: 1000,
-          delay: 1000,
+          delay: 500,
           easing: "ease-in-out",
           fill: "forwards",
         },
@@ -52,7 +53,7 @@ export default function Cta() {
   }, []);
 
   return (
-    <section className="w-full px-4 py-20 sm:px-8 sm:py-36">
+    <section className="w-full px-4 pt-20 sm:px-8 sm:pt-36 sm:pb-6 pb-5">
       <div className="mx-auto flex w-full max-w-350 flex-col gap-5 md:flex-row">
         <div
           ref={cardRef}
@@ -79,7 +80,7 @@ export default function Cta() {
           <div className="flex flex-1 flex-col">
             <h2
               data-section-heading
-              className="sans_serif text-5xl font-bold leading-[0.98] tracking-[-0.065em] sm:text-6xl"
+              className="sans_serif text-6xl font-bold leading-[0.98] tracking-[-0.065em] sm:text-6xl"
             >
               <RevealWords lines={["Handle", "sales from", "anywhere"]} />
             </h2>
@@ -88,28 +89,16 @@ export default function Cta() {
               your ideas into sales.
             </p>
 
-            <a
-              href="#pricing"
-              className="sans_serif mt-auto flex w-full items-center pt-12 text-xl text-[#1c1a19] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f5a0ea]"
-            >
-              <span className="flex min-h-15 flex-1 items-center rounded-full bg-white px-7">
+            <div className="mt-auto pt-12">
+              <SplitArrowAction
+                href="#pricing"
+                tone="light"
+                size="large"
+                className="w-full sans_serif text-xl"
+              >
                 Start selling
-              </span>
-              <span className="ml-2 flex size-15 shrink-0 items-center justify-center rounded-full bg-[#f5a0ea]">
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="size-6"
-                >
-                  <path d="M5 19 19 5M8 5h11v11" />
-                </svg>
-              </span>
-            </a>
+              </SplitArrowAction>
+            </div>
           </div>
         </div>
         <div className="relative min-h-100 w-full overflow-hidden rounded-3xl md:min-h-160 md:min-w-0 md:flex-1">

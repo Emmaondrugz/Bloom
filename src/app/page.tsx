@@ -15,6 +15,7 @@ import Testimonials from "@/components/Home/testimonials";
 import Pricing from "@/components/Home/pricing";
 import Faq from "@/components/Home/faq";
 import Cta from "@/components/Home/cta";
+import Footer from "@/components/Home/footer";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -172,6 +173,7 @@ export default function Home() {
       <Pricing />
       <Faq />
       <Cta />
+      <Footer />
     </div>
   );
 }

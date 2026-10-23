@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import NumberFlow from "@number-flow/react";
+import SplitArrowAction from "../ui/split-arrow-action";
 import RevealWords from "./reveal-words";
 
 const plans = [
   {
     name: "Starter",
     description: "Best for new creators & small shops",
-    prices: ["₦1499", "₦1199.20"],
+    monthlyPrice: 1499,
     features: [
       "1 storefront",
       "Up to 20 products",
@@ -21,7 +23,7 @@ const plans = [
   {
     name: "Advance",
     description: "Best for growing brands & full-time sellers",
-    prices: ["₦5999", "₦4799.20"],
+    monthlyPrice: 5999,
     features: [
       "Unlimited storefronts",
       "Unlimited products",
@@ -32,6 +34,12 @@ const plans = [
     featured: true,
   },
 ] as const;
+
+const YEARLY_DISCOUNT = 0.2;
+
+function yearlyTotal(monthlyPrice: number) {
+  return Math.round(monthlyPrice * 12 * (1 - YEARLY_DISCOUNT) * 100) / 100;
+}
 
 function ArrowIcon() {
   return (
@@ -47,78 +55,6 @@ function ArrowIcon() {
     >
       <path d="M5 19 19 5M8 5h11v11" />
     </svg>
-  );
-}
-
-const digitRows = Array.from({ length: 40 }, (_, index) => index % 10);
-
-function RollingDigit({
-  monthly,
-  yearly,
-  isYearly,
-  delay = 0,
-}: {
-  monthly: number;
-  yearly: number;
-  isYearly: boolean;
-  delay?: number;
-}) {
-  const rolls = (yearly - monthly + 10) % 10 || 10;
-  const row = 10 + monthly + (isYearly ? rolls : 0);
-
-  return (
-    <span className="price-odometer-column" aria-hidden="true">
-      <span
-        className="price-odometer-strip"
-        style={{
-          transform: `translateY(-${row}em)`,
-          transitionDelay: `${delay}ms`,
-        }}
-      >
-        {digitRows.map((digit, index) => (
-          <span className="price-odometer-row" key={index}>
-            {digit}
-          </span>
-        ))}
-      </span>
-    </span>
-  );
-}
-
-function RollingPrice({
-  monthly,
-  annual,
-  yearly,
-}: {
-  monthly: string;
-  annual: string;
-  yearly: boolean;
-}) {
-  const monthlyDigits = monthly.slice(1).split("").map(Number);
-  const yearlyDigits = annual.slice(1, 5).split("").map(Number);
-
-  return (
-    <span className="inline-flex items-end whitespace-nowrap">
-      <span className="sr-only">{yearly ? annual : monthly}</span>
-      <span aria-hidden="true">₦</span>
-      {monthlyDigits.map((digit, index) => (
-        <RollingDigit
-          key={index}
-          monthly={digit}
-          yearly={yearlyDigits[index]}
-          isYearly={yearly}
-          delay={(monthlyDigits.length - index - 1) * 55}
-        />
-      ))}
-      <span
-        className={`price-odometer-cents ${yearly ? "price-odometer-cents--visible" : ""}`}
-        aria-hidden="true"
-      >
-        <span>.</span>
-        <RollingDigit monthly={0} yearly={2} isYearly={yearly} delay={90} />
-        <RollingDigit monthly={0} yearly={0} isYearly={yearly} delay={35} />
-      </span>
-    </span>
   );
 }
 
@@ -224,7 +160,10 @@ export default function Pricing() {
                   {plan.name}
                 </h3>
                 {plan.featured && (
-                  <span data-micro-item="spin" className="mt-1 rounded-full bg-[#fea8f1] px-2.5 py-1 text-sm leading-none font-medium text-[#1d1918]">
+                  <span
+                    data-micro-item="spin"
+                    className="mt-1 rounded-full bg-[#fea8f1] px-2.5 py-1 text-sm leading-none font-medium text-[#1d1918]"
+                  >
                     POPULAR
                   </span>
                 )}
@@ -234,17 +173,27 @@ export default function Pricing() {
               >
                 {plan.description}
               </p>
-              <p className="mt-6 flex items-end gap-1 bricolage text-5xl leading-none font-bold tracking-[-0.055em]">
-                <RollingPrice
-                  monthly={plan.prices[0]}
-                  annual={plan.prices[1]}
-                  yearly={yearly}
+              <p className="mt-6 flex items-end gap-1 bricolage text-[clamp(1.75rem,8vw,3rem)] leading-none font-bold md:text-[clamp(1.75rem,5vw,3rem)]">
+                <NumberFlow
+                  value={yearly ? yearlyTotal(plan.monthlyPrice) : plan.monthlyPrice}
+                  locales="en-NG"
+                  prefix="₦"
+                  format={{
+                    minimumFractionDigits: yearly ? 2 : 0,
+                    maximumFractionDigits: yearly ? 2 : 0,
+                  }}
+                  className="whitespace-nowrap tabular-nums"
                 />
-                {plan.featured && (
-                  <span className="mb-1 text-base font-semibold tracking-normal">
-                    /MO
-                  </span>
-                )}
+                <span className="mb-1 shrink-0 text-sm font-semibold tracking-normal sm:text-base">
+                  /{yearly ? "YR" : "MO"}
+                </span>
+              </p>
+              <p
+                className={`mt-2 text-sm ${plan.featured ? "text-[#d8d4d2]" : "text-[#827c79]"}`}
+              >
+                {yearly
+                  ? `₦${(plan.monthlyPrice * (1 - YEARLY_DISCOUNT)).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/mo equivalent · billed yearly`
+                  : "Billed monthly"}
               </p>
             </div>
             <ul className="flex flex-1 flex-col gap-5 px-5 pt-9 pb-10 text-sm leading-snug sm:text-base">
@@ -270,21 +219,13 @@ export default function Pricing() {
                 </li>
               ))}
             </ul>
-            <div className="flex gap-1">
-              <button
-                type="button"
-                className={`h-[62px] min-w-0 flex-1 rounded-full px-5 text-left bricolage text-xl leading-tight font-bold tracking-[-0.04em] transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa] sm:px-7 ${plan.featured ? "bg-[#f7f7f7] text-[#1d1918]" : "bg-[#1d1918] text-[#f7f7f7]"}`}
-              >
-                Get {plan.name} Plan
-              </button>
-              <button
-                type="button"
-                aria-label={`Get ${plan.name} Plan`}
-                className="flex size-[62px] shrink-0 items-center justify-center rounded-full bg-[#fea8f1] text-[#1d1918] transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]"
-              >
-                <ArrowIcon />
-              </button>
-            </div>
+            <SplitArrowAction
+              size="large"
+              tone={plan.featured ? "light" : "dark"}
+              className="w-full bricolage text-xl font-bold tracking-[-0.04em]"
+            >
+              Get {plan.name} Plan
+            </SplitArrowAction>
           </article>
         ))}
       </div>

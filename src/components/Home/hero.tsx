@@ -1,4 +1,5 @@
 import ProfileStack from "../ui/profile_stack";
+import SplitArrowAction from "../ui/split-arrow-action";
 import RevealWords from "./reveal-words";
 
 const features = [
@@ -48,30 +49,9 @@ export default function Hero() {
             ))}
           </ul>
 
-          <div className="flex gap-2 items-center">
-            <div className="group flex h-14 cursor-pointer items-center space-x-1">
-              <div className="bg-black text-white text-lg rounded-full h-full flex items-center justify-start px-7 w-60">
-                Launch Store
-              </div>
-              <div className="rounded-full w-14 h-full bg-[#FEA8F1] group-hover:bg-[#ADF535] transition-colors duration-300 flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#000"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="transition-transform duration-300 group-hover:rotate-45"
-                >
-                  <path d="M7 7h10v10" />
-                  <path d="M7 17 17 7" />
-                </svg>
-              </div>
-            </div>
-          </div>
+          <SplitArrowAction href="#pricing" className="w-[300px] text-lg">
+            Launch Store
+          </SplitArrowAction>
         </div>
 
         <div className="pointer-events-none relative z-0 flex w-full items-end justify-center h-[45vh] sm:h-[55vh] xl:h-auto xl:absolute xl:inset-0">

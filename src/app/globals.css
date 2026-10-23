@@ -198,56 +198,9 @@ input[type="number"] {
   }
 }
 
-.price-odometer-column {
-  display: inline-block;
-  width: 0.62em;
-  height: 1em;
-  overflow: hidden;
-  flex: none;
-  font-variant-numeric: tabular-nums;
-}
-
-.price-odometer-strip {
-  display: flex;
-  flex-direction: column;
-  transition: transform 880ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform;
-}
-
-.price-odometer-row {
-  display: flex;
-  height: 1em;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-}
-
-.price-odometer-cents {
-  display: inline-flex;
-  width: 0;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(0.2em);
-  transition:
-    width 500ms ease,
-    opacity 350ms ease,
-    transform 500ms ease;
-}
-
-.price-odometer-cents--visible {
-  width: 1.65em;
-  opacity: 1;
-  transform: translateY(0);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .billing-switch-thumb--bounce-right,
   .billing-switch-thumb--bounce-left {
     animation: none;
-  }
-
-  .price-odometer-strip,
-  .price-odometer-cents {
-    transition: none;
   }
 }

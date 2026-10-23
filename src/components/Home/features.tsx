@@ -40,7 +40,7 @@ function CheckIcon({ muted = false }: { muted?: boolean }) {
 
 export default function Features() {
   return (
-    <section className="flex w-full flex-col items-center gap-10 px-4 py-24 sm:gap-10 sm:px-8 sm:py-32">
+    <section id="about" className="flex w-full flex-col items-center gap-10 px-4 py-24 sm:gap-10 sm:px-8 sm:py-32">
       <h2
         data-section-heading
         className="bricolage relative z-20 max-w-170 text-center text-[45px] leading-[90%] tracking-tight text-[#111] sm:text-6xl sm:leading-[100%]"
