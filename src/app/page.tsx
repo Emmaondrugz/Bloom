@@ -1,7 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
-import Lenis from "lenis";
-import "lenis/dist/lenis.css";
+import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -24,41 +22,6 @@ const DESKTOP_MOTION_QUERY =
 
 export default function Home() {
   const pageRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const media = window.matchMedia(DESKTOP_MOTION_QUERY);
-    let stopLenis: (() => void) | undefined;
-
-    const syncLenis = () => {
-      if (media.matches && !stopLenis) {
-        const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
-        const updateScrollTrigger = () => ScrollTrigger.update();
-        const tick = (time: number) => lenis.raf(time * 1000);
-
-        lenis.on("scroll", updateScrollTrigger);
-        gsap.ticker.add(tick);
-        gsap.ticker.lagSmoothing(0);
-
-        stopLenis = () => {
-          gsap.ticker.remove(tick);
-          lenis.off("scroll", updateScrollTrigger);
-          lenis.destroy();
-          gsap.ticker.lagSmoothing(500, 33);
-        };
-      } else if (!media.matches && stopLenis) {
-        stopLenis();
-        stopLenis = undefined;
-      }
-    };
-
-    media.addEventListener("change", syncLenis);
-    syncLenis();
-
-    return () => {
-      media.removeEventListener("change", syncLenis);
-      stopLenis?.();
-    };
-  }, []);
 
   useGSAP(
     () => {

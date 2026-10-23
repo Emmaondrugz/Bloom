@@ -43,7 +43,7 @@ function StepArrowNotch({ color }: { color: string }) {
 
 export default function Steps() {
   return (
-    <div className="w-full py-20 sm:gap-72 gap-32 flex flex-col h-fit">
+    <div id="steps" className="w-full py-20 sm:gap-72 gap-32 flex flex-col h-fit">
       {/* Section Heading */}
       <div className="flex flex-col items-center gap-3 text-center">
         <h2 className="text-base bg-[#FEA8F1] py-1.5 px-4 font-medium text-[#222] rounded-full">

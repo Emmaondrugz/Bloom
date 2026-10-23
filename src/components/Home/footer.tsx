@@ -1,8 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="flex min-h-screen w-full max-w-350 flex-col overflow-hidden rounded-t-3xl bg-[#FEA8F1]">
+    <footer id="contact" className="flex min-h-screen w-full max-w-350 flex-col overflow-hidden rounded-t-3xl bg-[#FEA8F1]">
       {/* Footer top content */}
       <div className="grid w-full gap-12 px-5 pt-12 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-14 sm:px-8 sm:pt-16 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)_minmax(0,1fr)] lg:items-end lg:px-14 lg:pt-14">
         <div className="flex min-w-0 flex-col gap-10 sm:col-span-2 lg:col-span-1">
@@ -73,9 +74,9 @@ export default function Footer() {
               <a href="/" className="underline">
                 Steps
               </a>
-              <a href="/" className="underline">
+              <Link href="/about" className="underline">
                 About us
-              </a>
+              </Link>
               <a href="#pricing" className="underline">
                 Pricing
               </a>

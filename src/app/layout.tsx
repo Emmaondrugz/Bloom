@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import SmoothScroll from "@/components/smooth-scroll";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 
 const geist = localFont({
@@ -54,6 +56,7 @@ export default function RootLayout({
       <body
         className={`${hedvigLettersSans.variable} ${poppins.variable} ${bricolage.variable} ${dmSans.variable} ${geist.variable} antialiased`}
       >
+        <SmoothScroll />
         {children}
       </body>
     </html>

@@ -158,7 +158,7 @@ export default function Testimonials() {
           consistently.
         </div>
 
-        <SplitArrowAction href="#about" className="w-[300px] text-lg sm:w-[380px]">
+        <SplitArrowAction href="/about" className="w-[300px] text-lg sm:w-[380px]">
           More About us
         </SplitArrowAction>
       </div>
