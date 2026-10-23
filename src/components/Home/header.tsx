@@ -5,10 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const navigation = [
-  { label: "Steps", href: "#steps" },
+  { label: "Steps", href: "/#steps" },
   { label: "About us", href: "/about" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Contact", href: "#contact" },
+  { label: "Pricing", href: "/#pricing" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Header() {
@@ -131,7 +131,7 @@ export default function Header() {
               className="mt-1 rounded-[20px] bg-white px-4 py-3 text-[#1c1917]"
             >
               {navigation.map((link, index) => (
-                <a
+                <Link
                   key={link.label}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
@@ -143,7 +143,7 @@ export default function Header() {
                   }}
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </nav>
             <a
@@ -179,9 +179,9 @@ export default function Header() {
           className="hidden items-center gap-10 lg:flex"
         >
           {navigation.map((link) => (
-            <a key={link.label} href={link.href}>
+            <Link key={link.label} href={link.href}>
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 

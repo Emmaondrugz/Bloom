@@ -72,7 +72,7 @@ export default function Pricing() {
     <section
       id="pricing"
       aria-labelledby="pricing-heading"
-      className="w-full bg-white px-4 max-w-350 py-20 sm:py-36 text-[#1d1918] sm:px-6 lg:px-5"
+      className="w-full scroll-mt-24 bg-white px-4 max-w-350 py-20 sm:py-36 text-[#1d1918] sm:px-6 lg:px-5"
     >
       <div className="mx-auto grid w-full max-w-[1700px] gap-5 md:grid-cols-2 xl:grid-cols-[minmax(0,1.2fr)_repeat(2,minmax(0,1fr))]">
         <div className="flex min-w-0 flex-col justify-between gap-12 md:col-span-2 xl:col-span-1">

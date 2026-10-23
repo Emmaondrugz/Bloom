@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer id="contact" className="flex min-h-screen w-full max-w-350 flex-col overflow-hidden rounded-t-3xl bg-[#FEA8F1]">
+    <footer id="contact" className="flex min-h-screen w-full max-w-350 scroll-mt-24 flex-col overflow-hidden rounded-t-3xl bg-[#FEA8F1]">
       {/* Footer top content */}
       <div className="grid w-full gap-12 px-5 pt-12 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-14 sm:px-8 sm:pt-16 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)_minmax(0,1fr)] lg:items-end lg:px-14 lg:pt-14">
         <div className="flex min-w-0 flex-col gap-10 sm:col-span-2 lg:col-span-1">
@@ -71,18 +71,18 @@ export default function Footer() {
           <div className="flex flex-col gap-2">
             <p className="opacity-50 font-medium">NAVIGATION</p>
             <div className="flex flex-col gap-2 text-base font-medium sm:text-xl">
-              <a href="/" className="underline">
+              <Link href="/#steps" className="underline">
                 Steps
-              </a>
+              </Link>
               <Link href="/about" className="underline">
                 About us
               </Link>
-              <a href="#pricing" className="underline">
+              <Link href="/#pricing" className="underline">
                 Pricing
-              </a>
-              <a href="/" className="underline">
+              </Link>
+              <Link href="/#contact" className="underline">
                 Contact
-              </a>
+              </Link>
             </div>
           </div>
           <div className="flex flex-col gap-2">
